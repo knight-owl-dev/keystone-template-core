@@ -1,0 +1,37 @@
+---@diagnostic disable: undefined-global
+-- .keystone/filters/dialog.lua
+-- Transforms ::: dialog blocks into stylized LaTeX dialog lines
+--
+-- Markdown sample:
+--
+-- ::: dialog
+-- - Hello?
+-- - It’s me.
+-- - I was wondering if after all these years…
+-- :::
+--
+-- Requires: % base-style.tex
+-- \newcommand{\dialogline}[1]{\noindent---~#1\\}
+--
+function Div(el)
+  if not el.classes:includes("dialog") then return end
+
+  local is_pdf = FORMAT == "latex"
+  local blocks = {}
+
+  for _, block in ipairs(el.content) do
+    if block.t == "BulletList" then
+      for _, item in ipairs(block.content) do
+        local text = pandoc.utils.stringify(item[1])
+
+        if is_pdf then
+          table.insert(blocks, pandoc.RawBlock("latex", "\\dialogline{" .. text .. "}"))
+        else
+          table.insert(blocks, pandoc.Para({ pandoc.Str("— "), pandoc.Str(text) }))
+        end
+      end
+    end
+  end
+
+  return blocks
+end
