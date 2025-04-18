@@ -1,0 +1,11 @@
+services:
+  keystone:
+    image: ${KEYSTONE_DOCKER_IMAGE}
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+    working_dir: /keystone
+    volumes:
+      - ../artifacts:/keystone/artifacts
+    env_file:
+      - ../.env
