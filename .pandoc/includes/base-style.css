@@ -1,0 +1,15 @@
+/* This CSS file is used to style the HTML output of Pandoc. */
+/* It is included in the HTML header using the --css option. */
+
+/* div-pagebreak */
+.pagebreak {
+  page-break-before: always;
+  break-before: page;
+}
+
+/* div-poem-date */
+.poem-date {
+  text-align: right;
+  font-style: italic;
+  margin-top: 1em;
+}
