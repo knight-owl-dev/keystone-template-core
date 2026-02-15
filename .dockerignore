@@ -1,0 +1,27 @@
+# Version control and IDE (never needed in container)
+.git/
+.gitkeep
+
+# Keystone private files
+.keystone/
+
+# Local notes and non-build content (not part of the image)
+drafts/
+research/
+
+# Output and temporary artifacts
+artifacts/
+*.aux
+*.log
+*.out
+*.pdf
+*.toc
+
+# OS-specific clutter
+.DS_Store
+
+# Operational config (not needed inside container)
+project.conf
+
+# Documentation files (not needed in container)
+**/README.md
