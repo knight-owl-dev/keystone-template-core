@@ -1,0 +1,25 @@
+---
+# Keystone-generated Pandoc metadata file
+# See: https://pandoc.org/MANUAL.html#variables for more details
+
+# Book layout settings
+documentclass: book
+
+# EPUB and HTML specific styling
+css:
+  - .pandoc/includes/base-style.css
+
+# LaTeX-specific styling
+header-includes:
+  - \usepackage{pifont}
+  - \usepackage{graphicx}
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancyfoot[C]{\keystonerights}   # Requires keystone.lua
+  - \fancyfoot[R]{\thepage}
+  - \fancyhead{}                     # Clear default headers
+  - \fancypagestyle{plain}{}         # Apply global style to chapter-start (plain) pages
+
+  # Load styles last to avoid any conflicts
+  - \input{.pandoc/includes/base-style.tex}
+...
