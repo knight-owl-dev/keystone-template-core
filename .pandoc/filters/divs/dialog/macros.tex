@@ -1,0 +1,7 @@
+% Dialog line macro
+\newcommand{\dialogline}[1]{\noindent---~#1\par\vspace{-0.5\baselineskip}}
+
+% Vertical space after dialog block
+% Must counterbalance the final line's \vspace in \dialogline
+% (keep in sync: if dialogline uses -0.5\baselineskip, use +0.5 here)
+\newcommand{\afterdialogblock}{\vspace{0.5\baselineskip}}
