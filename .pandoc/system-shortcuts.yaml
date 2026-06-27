@@ -1,0 +1,392 @@
+# AUTO-GENERATED — do not edit manually.
+# Source: src/runtime/.pandoc/system-shortcuts/
+# Regenerate: make generate-shortcuts
+
+# Applies text alignment to block-level content.
+#
+# Attributes:
+#   style — left | center | right | justified
+align:
+  class: ks-align
+  interface:
+    style:
+      bind: class.style
+
+# Composed figure with alignment control. Wraps the figure handler inside
+# the align handler. Default alignment is center — override with the
+# `align` attribute.
+#
+# Attributes:
+#   align         — left | center | right | justified (default: center)
+#   caption-width — "full" to let the caption span the full text width
+#                   instead of being constrained to the image width
+#   identifier    — cross-reference id (routed to the figure)
+#   width         — CSS length (e.g. "50%", "5cm"); sets image width
+aligned-figure:
+  class: ks-align
+  interface:
+    align:
+      bind: class.style
+      default: center
+    caption-width:
+      bind: ks-figure.caption-width
+    identifier:
+      bind: ks-figure.identifier
+    width:
+      bind: ks-figure.width
+  body: |
+    ::: ks-figure
+    :::
+
+# Styled callout with a colored left border and background tint.
+# Four types: tip, warning, note, example.
+#
+# Attributes:
+#   border — "none" to suppress the left border
+#   color  — #rrggbb hex; overrides the type's accent color
+#   title  — free text; defaults to the capitalized type name;
+#            empty string suppresses the title
+#   type   — tip | warning | note | example (required)
+aside:
+  class: ks-aside
+  interface:
+    border:
+      bind: class.border
+    color:
+      bind: class.color
+    title:
+      bind: class.title
+    type:
+      bind: class.type
+
+# Pure wrapper with no visual output. EPUB/HTML preserves the element
+# with its classes; LaTeX passes content through unchanged. Useful as
+# a terminal class for shortcuts that only need body injection or nesting.
+#
+# Supports both div and span syntax. No attributes.
+container:
+  class: ks-container
+
+# Transforms a bullet list into stylized dialog lines — em-dashes in
+# PDF, plain dashes in EPUB/HTML. Content is a standard Markdown
+# bullet list inside the div.
+#
+# Attributes:
+#   style — "hanging" wraps continuation lines indented under the
+#           speech instead of flush with the body margin. Default
+#           is the tight Continental convention.
+dialog:
+  class: ks-dialog
+  interface:
+    style:
+      bind: class.style
+
+# Include content only in DOCX output; strip it in all others. A thin
+# composition over ifdef: every build defines a format symbol (docx → docx),
+# so gating on `docx` is exactly "DOCX-only". Supports both div and span syntax.
+#
+# The symbol is a default, so an author can flip it (::: {.docx-only
+# symbol="latex"}) — honoring that override is correct. See the
+# conditional-inclusion guide.
+docx-only:
+  class: ifdef
+  interface:
+    symbol:
+      bind: class.symbol
+      default: docx
+
+# Enlarged initial letter at chapter or section openings. Div syntax
+# extracts the first character automatically; span syntax ([T]{.dropcap})
+# gives explicit control over which letter is enlarged.
+#
+# Attributes:
+#   font-family — a font registry name (e.g. "eb-garamond"); applies a
+#                  decorative font to the drop cap letter only (PDF + EPUB)
+#   lines       — positive integer; how many lines the drop cap spans
+#                  (default: 3)
+dropcap:
+  class: ks-dropcap
+  interface:
+    font-family:
+      bind: class.font-family
+    lines:
+      bind: class.lines
+      default: 3
+
+# Styled chapter-opening quotation composed from single-responsibility handlers.
+# Narrowed italic text with optional attribution. Font is the outer handler
+# so its \begingroup lands outside the quote environment, avoiding the
+# paragraph indent that occurs when RawBlocks precede content inside a
+# LaTeX quote list context. Source is nested inside quote so it shares the
+# quote's indented width — attribution right-aligns to the quote content
+# edge, not the page margin.
+#
+# Attributes:
+#   font-family — override font family
+#   font-size   — override font size
+#   font-style  — override font style (default: italic)
+#   source      — plain-text attribution (rendered with em-dash prefix)
+epigraph:
+  class: ks-font
+  interface:
+    font-family:
+      bind: class.family
+    font-size:
+      bind: class.size
+    font-style:
+      bind: class.style
+      default: italic
+    source:
+      bind: source.text
+  content: slot
+  body: |
+    ::: quote
+    ::: slot
+    :::
+    ::: source
+    :::
+    :::
+
+# Include content only in EPUB output; strip it in all others. A thin
+# composition over ifdef: every build defines a format symbol (epub → epub),
+# so gating on `epub` is exactly "EPUB-only". Supports both div and span syntax.
+#
+# The symbol is a default, so an author can flip it (::: {.epub-only
+# symbol="latex"}) — honoring that override is correct. See the
+# conditional-inclusion guide.
+epub-only:
+  class: ifdef
+  interface:
+    symbol:
+      bind: class.symbol
+      default: epub
+
+# Styled figure with explicit sizing control. The div wraps a standard
+# Markdown image; caption comes from the image alt text. Width constrains
+# both the image and its caption (via minipage in PDF, container width
+# in EPUB/HTML).
+#
+# Attributes:
+#   caption-width — "full" to let the caption span the full text width
+#                    instead of being constrained to the image width
+#   width         — CSS length (e.g. "50%", "5cm"); sets image width
+figure:
+  class: ks-figure
+  interface:
+    caption-width:
+      bind: class.caption-width
+    width:
+      bind: class.width
+
+# Applies font-family, font-style, and/or font-size overrides. All three
+# attributes are independent and can be combined. Supports both div and
+# span syntax.
+#
+# Attributes:
+#   family — a font registry name (e.g. "eb-garamond", "libertine");
+#            see fonts/README.md for built-in and user-registered families
+#   size   — tiny | scriptsize | footnotesize | small | normalsize |
+#            large | Large | LARGE | huge | Huge
+#   style  — italic | bold | bold-italic
+font:
+  class: ks-font
+  interface:
+    family:
+      bind: class.family
+    size:
+      bind: class.size
+    style:
+      bind: class.style
+
+# Includes content only when one of the requested build symbols is defined;
+# strips it otherwise. Supports both div and span syntax. Symbols are build
+# configuration (declared in project.conf, selected with `make publish
+# using=<name>`), not document metadata — see the conditional-inclusion guide.
+#
+# Attributes:
+#   symbol — one or more whitespace-separated symbols (OR-combined); the
+#            content is kept when ANY is defined. Required — a bare ifdef is
+#            an error.
+ifdef:
+  class: ks-ifdef
+  interface:
+    symbol:
+      bind: class.symbol
+
+# Includes content only when NONE of the requested build symbols are defined;
+# strips it otherwise. The inverse of ifdef. Supports both div and span syntax.
+# Symbols are build configuration (declared in project.conf, selected with
+# `make publish using=<name>`), not document metadata.
+#
+# Attributes:
+#   symbol — one or more whitespace-separated symbols (OR-combined); the
+#            content is removed when ANY is defined. Required — a bare ifndef
+#            is an error.
+ifndef:
+  class: ks-ifndef
+  interface:
+    symbol:
+      bind: class.symbol
+
+# Include content only in LaTeX/PDF output; strip it in all others. A thin
+# composition over ifdef: every build defines a format symbol (pdf → latex),
+# so gating on `latex` is exactly "PDF-only". Supports both div and span syntax.
+#
+# The symbol is a default, so an author can flip it (::: {.latex-only
+# symbol="epub"}) — that's asking for the opposite on purpose, and honoring it
+# is correct. See the conditional-inclusion guide.
+latex-only:
+  class: ifdef
+  interface:
+    symbol:
+      bind: class.symbol
+      default: latex
+
+# Wraps content in a multi-column layout using the multicol LaTeX
+# package (PDF) or CSS column-count (EPUB/HTML).
+#
+# Attributes:
+#   cols — integer from 2 to 4 (default: 2)
+multicol:
+  class: ks-multicol
+  interface:
+    cols:
+      bind: class.cols
+      default: 2
+
+# Suppresses first-line paragraph indentation within its scope.
+# Useful for dedications, poetry, title pages, or any content where
+# paragraph indentation is out of place. No attributes.
+no-indent:
+  class: ks-no-indent
+
+# Include content only in ODT output; strip it in all others. A thin
+# composition over ifdef: every build defines a format symbol (odt → odt),
+# so gating on `odt` is exactly "ODT-only". Supports both div and span syntax.
+#
+# The symbol is a default, so an author can flip it (::: {.odt-only
+# symbol="latex"}) — honoring that override is correct. See the
+# conditional-inclusion guide.
+odt-only:
+  class: ifdef
+  interface:
+    symbol:
+      bind: class.symbol
+      default: odt
+
+# Inserts a page break. Produces \clearpage in PDF, a CSS page-break
+# element in EPUB/HTML, and native break elements in DOCX/ODT.
+# Always used as an empty div. No attributes.
+pagebreak:
+  class: ks-pagebreak
+
+# Styled mid-chapter quotation composed from single-responsibility handlers.
+# Centered large italic text with optional attribution and optional rules.
+#
+# Attributes:
+#   align       — left | center | right | justified (default: center)
+#   font-family — override font family (e.g. eb-garamond)
+#   font-size   — override font size (default: large)
+#   font-style  — override font style (default: italic)
+#   source      — plain-text attribution (rendered with em-dash prefix)
+#   style       — plain (default) | ruled (horizontal rules above and below)
+pullquote:
+  class: ks-align
+  interface:
+    align:
+      bind: class.style
+      default: center
+    font-family:
+      bind: font.family
+    font-size:
+      bind: font.size
+      default: large
+    font-style:
+      bind: font.style
+      default: italic
+    source:
+      bind: source.text
+    style:
+      bind: rule.style
+      default: plain
+  content: font
+  body: |
+    ::: rule
+    :::
+    ::: font
+    :::
+    ::: source
+    :::
+    ::: rule
+    :::
+
+# Wraps content in a narrowed (indented) block with left and right margins.
+# No attributes — pure structural wrapper.
+quote:
+  class: ks-quote
+
+# Conditional horizontal rule. Renders a thin line when style=ruled;
+# returns an empty block list otherwise (no output). Used in composed
+# shortcuts like pullquote to toggle decorative borders.
+#
+# Attributes:
+#   style — ruled (renders line) | any other value or absent (no output)
+rule:
+  class: ks-rule
+  interface:
+    style:
+      bind: class.style
+
+# Decorative scene break between sections. Empty divs produce a default
+# "* * *" ornament; content divs preserve whatever the author writes.
+# Custom ornaments are best supplied via shortcut body injection.
+# No attributes.
+scene-break:
+  class: ks-scene-break
+
+# Sets an author-declared running-header mark at this point — no visible output
+# in any format, an effect only in PDF running headers. The value persists
+# until the next `.set` for the same mark; empty content clears it. Div and span
+# syntax. The mark must be declared under `marks:` in pandoc.yaml and is read in
+# headers via the matching `{name}` placeholder — see the running-header marks
+# guide.
+#
+# Attributes:
+#   mark — the declared mark channel to set (e.g. poem-author). Required — a
+#          bare `.set` marks nothing and is an error.
+set:
+  class: ks-set
+  interface:
+    mark:
+      bind: class.mark
+
+# Content placeholder for body injection. Routes author content into a
+# specific position within a parent div, allowing fixed body elements
+# (like source) to coexist alongside author content.
+# Alias for the container handler (no-op passthrough).
+slot:
+  class: ks-container
+
+# Attribution line with em-dash prefix. Reads a text attribute and
+# renders it right-aligned in upright style. Returns an empty block
+# list when text is absent — the div is silently removed.
+#
+# Attributes:
+#   text — plain-text attribution (e.g. author name)
+source:
+  class: ks-source
+  interface:
+    text:
+      bind: class.text
+
+# Explicit vertical whitespace. Empty divs only.
+# Named sizes: tiny, small, medium, large, huge.
+# Explicit CSS lengths also accepted (e.g. "3cm", "1.5em", "12pt").
+#
+# Attributes:
+#   size — named size or CSS length (required)
+vspace:
+  class: ks-vspace
+  interface:
+    size:
+      bind: class.size

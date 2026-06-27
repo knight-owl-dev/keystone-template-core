@@ -1,0 +1,8 @@
+% Scene break macro — centers content with page-break protection.
+% \nopagebreak after \par prevents the ornament from being orphaned
+% at the top of a page.
+\newcommand{\scenebreak}[1]{%
+  \par\nopagebreak\vspace{1em}%
+  \begin{center}#1\end{center}%
+  \vspace{1em}%
+}

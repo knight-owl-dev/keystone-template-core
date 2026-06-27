@@ -1,0 +1,2 @@
+.quote { margin: 1.5em 2em; }
+.quote p + p { text-indent: 0; }

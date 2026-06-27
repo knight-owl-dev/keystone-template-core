@@ -1,0 +1,6 @@
+/* ── No-indent handler — suppress paragraph indentation ───────── */
+/* Overrides the global p + p { text-indent: var(--ks-indent); }   */
+/* rule via higher specificity. Zeroes the value rather than       */
+/* unsetting the variable — other handlers may still need it.      */
+
+.no-indent p + p { text-indent: 0; }

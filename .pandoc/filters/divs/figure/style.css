@@ -1,0 +1,61 @@
+/* ── Figure handler — all figure CSS lives here ──────────────────── */
+/* This file is auto-injected by divs.lua for every document, so it   */
+/* covers both standalone images (bare ![caption](img)) and the       */
+/* ::: figure div handler.                                            */
+/*                                                                    */
+/* Pandoc wraps captioned images in <figure>:                         */
+/*   standalone: <figure> > img + figcaption                          */
+/*   div handler: .figure > figure > img + figcaption                 */
+
+/* ── Standalone figures (no handler div) ─────────────────────────── */
+/* Center bare ![caption](img) by default. The handler resets these   */
+/* on .figure figure below, so this only affects standalone images.   */
+
+figure {
+  text-align: center;
+  margin: 1.5em auto;
+}
+
+figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+figcaption {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 0.5em;
+}
+
+/* ── Handler divs — caption constraining ─────────────────────────── */
+/* Shrink-wrap the container to its content width. When an explicit   */
+/* width is set (via style= on the div), the container constrains     */
+/* both the image and caption to that width.                          */
+
+.figure { display: table; margin: 1.5em 0; }
+
+/* Inner <figure> inherits the shrink-wrap; reset the standalone      */
+/* centering and user-agent margins so the outer .figure controls     */
+/* all positioning.                                                   */
+.figure figure { display: table; margin: 0; text-align: inherit; }
+
+/* Pin the caption below the image and always center it relative to   */
+/* the image width — matches LaTeX's caption package behavior.        */
+/* text-align: center prevents alignment context (.style-left etc.)   */
+/* from cascading into caption text.                                  */
+.figure figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  text-align: center;
+}
+
+/* Responsive fallback: images never exceed their container.          */
+.figure img { max-width: 100%; height: auto; }
+
+/* ── caption-width=full escape hatch ─────────────────────────────── */
+/* Restores block layout so the caption spans full text width.        */
+/* The image keeps its explicit width attribute; the container is     */
+/* unconstrained.                                                     */
+.figure.caption-full { display: block; }
+.figure.caption-full figure { display: block; }
+.figure.caption-full figcaption { display: block; }

@@ -1,0 +1,28 @@
+/* ── Align handler — text and block alignment ────────────────────── */
+/* The align handler wraps content in a div with .style-* classes.    */
+/* text-align handles inline content (paragraphs, spans).             */
+
+.style-left { text-align: left; margin-top: 1em; }
+.style-center { text-align: center; margin-top: 1em; }
+.style-right { text-align: right; margin-top: 1em; }
+.style-justified { text-align: justify; margin-top: 1em; }
+
+/* ── Block-level image alignment ─────────────────────────────────── */
+/* text-align doesn't control block-level elements. EPUB readers      */
+/* render <img> as display:block (e.g. Apple Books adds margin:auto), */
+/* so explicit margin rules are needed for left/right positioning.    */
+/* Targets both standalone images (p > img) and captioned images      */
+/* inside <figure>.                                                   */
+
+.style-left figure img, .style-left p > img { display: block; margin-left: 0; margin-right: auto; }
+.style-center figure img, .style-center p > img { display: block; margin-left: auto; margin-right: auto; }
+.style-right figure img, .style-right p > img { display: block; margin-left: auto; margin-right: 0; }
+
+/* ── Figure handler container alignment ──────────────────────────── */
+/* The .figure div uses display:table for caption constraining.       */
+/* display:table elements are block-level and ignore text-align —     */
+/* margin-based positioning is needed to move the whole container.    */
+
+.style-left .figure { margin-left: 0; margin-right: auto; }
+.style-center .figure { margin-left: auto; margin-right: auto; }
+.style-right .figure { margin-left: auto; margin-right: 0; }

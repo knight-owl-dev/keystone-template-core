@@ -1,0 +1,19 @@
+\usepackage[breakable,skins]{tcolorbox}
+
+\definecolor{aside-tip}{HTML}{5b7a5e}
+\definecolor{aside-warning}{HTML}{9e7c4a}
+\definecolor{aside-note}{HTML}{4a6a8a}
+\definecolor{aside-example}{HTML}{6a5a7a}
+
+\newtcolorbox{asidebox}[2][]{%
+  enhanced,
+  breakable,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  boxrule=0pt,
+  frame hidden,
+  colback=#2!5,
+  fonttitle=\bfseries\small,
+  coltitle=#2!80!black,
+  attach title to upper={\par\smallskip},
+  #1
+}

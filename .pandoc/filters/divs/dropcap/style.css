@@ -1,0 +1,7 @@
+.dropcap {
+  float: left;
+  font-size: calc(var(--dropcap-lines, 3) * 1.2em);
+  line-height: 0.8;
+  padding-right: 0.05em;
+  margin-top: 0.05em;
+}

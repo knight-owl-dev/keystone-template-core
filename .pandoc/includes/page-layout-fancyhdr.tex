@@ -1,0 +1,109 @@
+% =====================================================================
+% page-layout-fancyhdr.tex — Running headers/footers wired via fancyhdr
+%
+% Maps each of the twelve \keystone* content macros (defined by the
+% page-furniture.lua filter) to one of fancyhdr's parity-aware slot
+% positions. Slot composition (text vs. page number, recto/verso
+% fallback, center-slot conflict) lives in Lua so this include stays
+% package-agnostic — its KOMA-Script counterpart
+% (page-layout-scrlayer.tex) consumes the same macros via
+% scrlayer-scrpage's native slot API.
+%
+% It also owns the head-rule default for this package: the rule is off
+% by default, and the package-agnostic \keystoneheaderrule shim (defined
+% below, emitted by page-furniture.lua only when the author sets
+% header-rule: enabled) re-enables it through fancyhdr's \headrulewidth.
+% The scrlayer counterpart defines the same shim over headsepline.
+%
+% fancyhdr slot naming: the third character is the column
+% (L/C/R = left/center/right), the fourth is the page parity
+% (O/E = odd/even = recto/verso). Under \documentclass{article}
+% or \documentclass{report} (single-sided by default), only the
+% O-suffixed slots are selected; the E-suffixed wirings compile
+% but never render. Two-sided documents (book / scrbook, or any
+% target with classoption: twoside) get parity-distinct output.
+%
+% Chapter-start pages — the first page of every chapter and the
+% table of contents (where LaTeX issues `\thispagestyle{plain}`) —
+% render bare: no header, no footer, no rules. fancyhdr's default
+% would inherit the body-page header/footer/rule, which is wrong for
+% book typography (the chapter heading is the page's only landmark).
+%
+% Auto-inserted filler blanks — the verso `\cleardoublepage` inserts
+% before a recto chapter opening — are likewise kept bare, via the
+% `\cleardoublepage` redefinition near the foot of this file. fancyhdr
+% would otherwise print a stale running mark and the folio on them; the
+% scrlayer/KOMA targets style such blanks empty by default, so this
+% restores parity.
+%
+% This file is part of the Keystone project layout.
+% =====================================================================
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% Head rule — off by default (the rule is opt-in via the header-rule
+% metadata key). fancyhdr's \pagestyle{fancy} would otherwise draw its
+% 0.4pt default headrule on every body page; we zero it here so the
+% consolidated default matches the scrlayer side (headsepline=false).
+% page-furniture.lua emits \keystoneheaderrule — defined just below —
+% only when the author enables the rule, re-raising it to 0.4pt. The
+% plain pagestyle (chapter-start pages) keeps its own 0pt regardless.
+\renewcommand{\headrulewidth}{0pt}
+\newcommand{\keystoneheaderrule}{\renewcommand{\headrulewidth}{0.4pt}}
+
+% Dynamic-placeholder shims. The page-furniture filter emits these
+% macro references when an author writes `{page}`, `{chapter}`, or
+% `{section}` in `header-text` / `footer-text` content. Resolution
+% is per-package: fancyhdr's marks (\leftmark, \rightmark) are
+% uppercased by default, so `\nouppercase{...}` preserves the case
+% the author set at the `\markboth` boundary. `\providecommand` (not
+% `\newcommand`) lets a future author or test override the shim
+% per-document if needed.
+\providecommand{\keystonepagemark}{\thepage}
+\providecommand{\keystonechaptermark}{\nouppercase{\leftmark}}
+\providecommand{\keystonesectionmark}{\nouppercase{\rightmark}}
+\fancyhead[LO]{\keystoneheaderLO}\fancyhead[LE]{\keystoneheaderLE}
+\fancyhead[CO]{\keystoneheaderCO}\fancyhead[CE]{\keystoneheaderCE}
+\fancyhead[RO]{\keystoneheaderRO}\fancyhead[RE]{\keystoneheaderRE}
+\fancyfoot[LO]{\keystonefooterLO}\fancyfoot[LE]{\keystonefooterLE}
+\fancyfoot[CO]{\keystonefooterCO}\fancyfoot[CE]{\keystonefooterCE}
+\fancyfoot[RO]{\keystonefooterRO}\fancyfoot[RE]{\keystonefooterRE}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% Filler blanks inserted by `\cleardoublepage` — the verso it pushes before
+% a recto-opening page in a two-sided document (book by default; report or
+% article only with `classoption: twoside`) — inherit the active
+% `\pagestyle{fancy}`, so fancyhdr prints the running head, foot, and folio
+% on a page meant to be blank (e.g. a stale "Contents" mark after the TOC).
+% Redefine `\cleardoublepage` to stamp `\thispagestyle{empty}` on the blank,
+% matching the scrlayer/KOMA targets and the emptypage package's idiom.
+%
+% `\if@twoside` / `\if@twocolumn` are the kernel's own guards: one-sided
+% documents insert no filler blank (their `\cleardoublepage` is a plain
+% `\clearpage`), so preserving them leaves that case untouched. The page
+% counter is not altered — only the printed folio on the blank disappears.
+%
+% Suppressing the folio too (not just head/foot) is deliberate: the title
+% and first TOC page already carry no folio (empty/plain), so a folio on the
+% intervening blank would be an orphan. KOMA suppresses it likewise. Strict
+% folio-on-blanks would need a bespoke pagestyle (empty head, folio-only
+% foot), not a change here.
+%
+% Body mirrors the kernel's `\cleardoublepage` (classes.dtx) verbatim, plus
+% the `\thispagestyle{empty}` line. On a TeX Live bump, diff against the
+% kernel definition if blank-page behavior shifts.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage%
+  \if@twoside%
+    \ifodd\c@page\else%
+      \thispagestyle{empty}%
+      \hbox{}\newpage%
+      \if@twocolumn\hbox{}\newpage\fi%
+    \fi%
+  \fi%
+}
+\makeatother

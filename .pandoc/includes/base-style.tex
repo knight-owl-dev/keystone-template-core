@@ -1,0 +1,66 @@
+% =====================================================================
+% base-style.tex — Common LaTeX macros for Pandoc output
+% This file is included via --include-in-header and defines general-
+% purpose macros. Div-specific macros are co-located with their
+% handlers in filters/divs/ and auto-injected by divs.lua.
+%
+% You can learn more about using LaTeX with Pandoc here:
+% https://pandoc.org/MANUAL.html#variables-for-latex
+%
+% This file is part of the Keystone project layout.
+% =====================================================================
+
+% =====================================================================
+% Shortcuts for common symbols
+% ====================================================================
+\newcommand{\tick}{\ding{51}}  % ✔
+\newcommand{\cross}{\ding{55}} % ✘
+
+% =====================================================================
+% Figure captions — consistent formatting for all LaTeX figures
+%
+% Applies to every \caption{} call, whether from bare ![alt](img) or
+% from the figure handler's \begin{figure}. Loaded here (global)
+% rather than in the handler because standalone images benefit too.
+% =====================================================================
+\usepackage[font=small, labelfont=bf, skip=8pt]{caption}
+
+% =====================================================================
+% Code block styling — structural layout
+%
+% This file owns the structural presentation of code blocks: line
+% breaking, font size, and the snugshade box. Per-theme colors
+% (shadecolor) are injected separately by the code-theme registry
+% (filters/code-themes/*/style.tex via code-theme-registry.lua).
+%
+% Together they form a complete code block:
+%   base-style.tex  → shape: breaklines, small font, snugshade box
+%   style.tex       → paint: \definecolor{shadecolor}{RGB}{...}
+%
+% fvextra extends fancyvrb with breaklines support. Loaded here (not
+% in base-packages.tex) because it serves code block configuration —
+% the \fvset call below depends on it, and the two belong together.
+%
+% framed provides snugshade (used by the Shaded renewal below). Pandoc
+% only loads framed when a theme has an explicit backgroundColor; themes
+% with no background (pygments, monochrome, haddock) skip it. Loading
+% unconditionally here ensures snugshade is always available.
+%
+% Deferred with \AtBeginDocument because Pandoc's highlighting-macros
+% (which define Shaded) appear after header-includes in the LaTeX
+% template. Guarded with \ifdefined because Pandoc only emits
+% highlighting-macros when the document contains code blocks.
+% =====================================================================
+\usepackage{fvextra}
+\usepackage{framed}
+\AtBeginDocument{%
+  \ifdefined\Shaded%
+    \fvset{breaklines=true}%
+    \renewenvironment{Shaded}{%
+      \begin{snugshade}\small%
+    }{%
+      \end{snugshade}%
+    }%
+  \fi
+}
+

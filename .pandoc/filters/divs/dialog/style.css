@@ -1,0 +1,26 @@
+/* ── Dialog handler — visual model parallels the LaTeX macros ─── */
+/* `.dialog`     mirrors \beforedialogblock / \afterdialogblock     */
+/* `.dialog p`   mirrors \dialogline (tight inter-line, no indent)  */
+/*                                                                  */
+/* The text-indent override on `.dialog p` is what fixes the        */
+/* indent-on regression: without it, the global                     */
+/* `p + p { text-indent: var(--ks-indent) }` rule reaches the       */
+/* second dialog line. `.dialog p` has specificity (0,1,1) vs       */
+/* `p + p` at (0,0,2) — the class lifts it above the global rule    */
+/* regardless of CSS load order.                                    */
+/*                                                                  */
+/* `.dialog + p` restores indent for the prose paragraph that       */
+/* follows the dialog block — the wrapper div breaks the p + p      */
+/* adjacency, so the trailing paragraph would otherwise read as a   */
+/* chapter opener (flush left). Same pattern as .vspace + p.        */
+
+.dialog { margin: 1em 0; }
+.dialog p { margin: 0; text-indent: 0; }
+.dialog + p { text-indent: var(--ks-indent); }
+
+/* Hanging variant — opt-in via `::: {.dialog style=hanging}` in markdown.
+   Wrapped continuation rows hang under the speech instead of flowing
+   back to the body margin, matching the LaTeX \dialoglinehang behavior.
+   The classic hanging-indent trick: padding pushes the body right,
+   negative text-indent pulls the first line (with its em-dash) back. */
+.dialog.hanging p { padding-left: 1.5em; text-indent: -1.5em; }

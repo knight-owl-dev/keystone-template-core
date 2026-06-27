@@ -1,0 +1,20 @@
+% =====================================================================
+% draft-watermark.tex — Diagonal "draft" watermark overlay (PDF only).
+%
+% Activated by keystone.lua only when draft metadata is set (enabled or a
+% custom string); see inject_draft_watermark. Not loaded by any target yaml
+% directly, because the watermark is per-document metadata, not a fixed
+% class trait.
+%
+% Contract: keystone.lua \newcommand-defines two neutral value macros
+% BEFORE \input-ing this file, then this file feeds them to the package:
+%   \keystonewatermarktext  — the (LaTeX-escaped) watermark string
+%   \keystonewatermarkscale — the scale factor, e.g. 1.00
+% Lua owns the dynamic logic (DRAFT vs custom text, scale validation, and
+% the auto-shrink that fits longer text to the page diagonal); this file
+% owns only the package wiring, mirroring how page-furniture.lua feeds its
+% \keystone* macros to the page-layout includes.
+% =====================================================================
+\usepackage{draftwatermark}
+\SetWatermarkText{\keystonewatermarktext}
+\SetWatermarkScale{\keystonewatermarkscale}

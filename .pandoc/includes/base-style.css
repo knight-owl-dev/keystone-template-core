@@ -1,0 +1,43 @@
+/* base-style.css — Common CSS for Pandoc HTML/EPUB output.             */
+/* Div-specific rules are co-located with their handlers in             */
+/* filters/divs/ and auto-injected by divs.lua.                         */
+/*                                                                      */
+/* IMPORTANT: This file styles raw Pandoc output only (elements that    */
+/* exist without any handler active). Handler-specific styling belongs  */
+/* in the handler's own style.css. Broad selectors here (e.g. figure,   */
+/* img) WILL bleed into handler output and cause hard-to-trace layout   */
+/* bugs — scope with :not() when the same element appears inside a      */
+/* handler div.                                                         */
+
+/* ── Typographic constants ──────────────────────────────────────────  */
+/* Single source of truth for paragraph indent size. Referenced by      */
+/* keystone.lua (p + p rule) and handler CSS (vspace, no-indent, etc.). */
+
+:root { --ks-indent: 1.5em; }
+
+/* ── Code blocks — structural layout ────────────────────────────────  */
+/* This file owns the structural presentation of code blocks: spacing,  */
+/* corners, font size, and overflow handling. Per-theme colors          */
+/* (background-color, and foreground color for dark themes) are         */
+/* injected separately by the code-theme registry                       */
+/* (filters/code-themes/<theme>/style.css via code-theme-registry.lua)  */
+/*                                                                      */
+/* Together they form a complete code block:                            */
+/*   base-style.css  -> shape: padding, border-radius, font-size, wrap  */
+/*   style.css       -> paint: background-color, color                  */
+
+pre {
+  padding: 0.8em 1em;
+  border-radius: 4px;
+  font-size: 0.85em;
+  overflow-x: auto;
+  word-wrap: break-word;
+}
+
+code {
+  font-size: 0.9em;
+}
+
+pre > code {
+  font-size: inherit;
+}

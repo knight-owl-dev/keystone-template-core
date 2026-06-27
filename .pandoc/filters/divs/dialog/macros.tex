@@ -1,0 +1,34 @@
+% Dialog line — neutralize \parskip so consecutive lines stack tightly
+% on a single \baselineskip regardless of whether parskip is loaded.
+% \hspace*{0pt} acts as a microtype "protrusion fence" at the line's
+% left edge: without it, microtype shifts the leading em-dash into the
+% margin to optically balance the body text, which makes dialog lines
+% look misaligned with surrounding prose. The zero-width hspace gives
+% microtype a non-protrudable token to anchor against, so the em-dash
+% sits flush with the text margin.
+\newcommand{\dialogline}[1]{\noindent\hspace*{0pt}---~#1\par\vspace{-\parskip}}
+
+% Dialog line — hanging variant. Same as \dialogline but with a 1.5em
+% hanging indent so wrapped continuation rows sit under the speech,
+% not under the em-dash. Used by the dialog handler when the div
+% carries style=hanging. The \hangindent/\hangafter pair is set
+% before \noindent so the indent applies to the current paragraph.
+\newcommand{\dialoglinehang}[1]{\hangindent=1.5em\hangafter=1\noindent\hspace*{0pt}---~#1\par\vspace{-\parskip}}
+
+% Block-level breathing room around a dialog block. Both ends land on
+% \medskipamount of visible separation in every mode, but the formulas
+% differ because \dialogline's \vspace{-\parskip} eats the trailing
+% \parskip after the last line, breaking the symmetry:
+%
+%   Before:  prose ─ \par ─ \parskip ─ \beforedialogblock ─ first line
+%            total = \parskip + (\medskipamount - \parskip) = \medskipamount
+%
+%   After:   last line ─ \par ─ \vspace{-\parskip} ─ \afterdialogblock
+%                    ─ \parskip ─ next prose
+%            total = -\parskip + \medskipamount + \parskip = \medskipamount
+%
+% In book/indent-on (\parskip = 0) the \dimexpr collapses to \medskipamount
+% on the before side; in article/report (\parskip ≈ \medskipamount) it
+% collapses to ~0pt and the natural \parskip carries the load.
+\newcommand{\beforedialogblock}{\vspace{\dimexpr\medskipamount-\parskip\relax}}
+\newcommand{\afterdialogblock}{\vspace{\medskipamount}}
