@@ -1,0 +1,5 @@
+/* monochrome — grayscale theme with no syntax colors */
+
+pre {
+  background-color: #f8f8f8;
+}

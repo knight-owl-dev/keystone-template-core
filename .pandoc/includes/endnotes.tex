@@ -1,0 +1,37 @@
+% =====================================================================
+% endnotes.tex — Redirect footnotes to collected endnotes (PDF only).
+%
+% Activated by keystone.lua only when keystone-note-placement: endnotes
+% (see inject_note_placement). Not loaded by any target yaml directly,
+% because the choice is per-document metadata, not a fixed class trait.
+%
+% Mechanism: the endnotes package turns \endnote{} calls into entries
+% flushed at \theendnotes (keystone.lua appends that marker as the last
+% body block). Aliasing \footnote to \endnote transparently redirects
+% all of Pandoc's \footnote{} output — author footnotes and note-style
+% citeproc citations alike — with no AST-level Note rewriting.
+%
+% Timing: the alias waits for \AtBeginDocument so it runs AFTER hyperref
+% patches \footnote in its own begin-document hook. A bare \let in the
+% preamble would be clobbered by hyperref and silently revert to
+% page-bottom footnotes.
+% =====================================================================
+\usepackage{endnotes}
+\AtBeginDocument{\let\footnote\endnote}
+
+% Collection heading matches the class's top-level division, self-detected:
+% book / report / scrbook / scrreprt define \chapter; article / scrartcl do
+% not. \ifdefined is the native capability test — no class list to maintain,
+% and \section* stays safe in classes where \chapter* would error. The
+% trailing \mbox{}\par\vskip mirrors the package's own spacing correction.
+\renewcommand{\enoteheading}{%
+  \ifdefined\chapter\chapter*{\notesname}\else\section*{\notesname}\fi
+  \mbox{}\par\vskip-\baselineskip}
+
+% Flush the collected notes — but only if any were recorded. Book targets
+% default to endnotes, so a book with no notes would otherwise emit an empty
+% "Notes" heading (and its page). \value{endnote} reflects every \endnote call
+% (hand footnotes and note-style citeproc citations alike) by end of body, so
+% this also stays correct for citation-only documents. keystone.lua appends
+% this as the final body block.
+\newcommand{\keystoneflushendnotes}{\ifnum\value{endnote}>0\relax\theendnotes\fi}
