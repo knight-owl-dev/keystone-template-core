@@ -1,0 +1,5 @@
+.scene-break {
+  text-align: center;
+  margin: 1em 0;
+  break-inside: avoid;
+}

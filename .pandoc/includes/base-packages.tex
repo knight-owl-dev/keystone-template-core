@@ -1,0 +1,41 @@
+% =====================================================================
+% base-packages.tex — Shared LaTeX packages used by every Keystone
+% target.
+%
+% These are package loads that every documentclass needs and that no
+% individual target overrides. Loading them from one include keeps the
+% target yamls free of boilerplate: each target carries one \input for
+% shared packages, one for its page-layout package (fancyhdr or
+% scrlayer-scrpage), and one for base-style.tex.
+%
+% What belongs here:
+%   - Cross-target dependencies (every target loads them).
+%   - Format-agnostic packages (the LaTeX writer is the only consumer,
+%     so EPUB / DOCX / ODT are unaffected).
+%   - Packages shared by two or more independent consumers (e.g. a div
+%     handler and a document-wide filter). This is keystone's own layer
+%     of the implicit-default-preamble contract: like the packages
+%     pandoc's template loads for us, anything here is a baseline every
+%     consumer may assume, so they call the commands bare without loading
+%     the package. ragged2e is the precedent — keystone.lua's \RaggedRight
+%     and the align handler's \justifying both need it, so neither owns it.
+%
+% What does NOT belong here:
+%   - Anything target-specific (e.g. KOMA's scrlayer-scrpage — that
+%     lives in page-layout-scrlayer.tex).
+%   - Anything that's only needed by a subset of formats (the EPUB /
+%     DOCX / ODT pipelines bypass LaTeX, so additions here don't
+%     reach them).
+%   - Anything style-related (load order matters; styles go through
+%     base-style.tex, which the target yamls input last).
+%
+% This file is part of the Keystone project layout.
+% =====================================================================
+\usepackage{pifont}
+\usepackage{graphicx}
+
+% Hyphenation-preserving ragged-right. Shared by two consumers: keystone.lua's
+% document-wide justify control (\RaggedRight) and the align handler's
+% keystonejustify environment (\justifying). Belongs here rather than in either
+% consumer because neither owns it.
+\usepackage{ragged2e}

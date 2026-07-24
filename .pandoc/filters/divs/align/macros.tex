@@ -1,0 +1,7 @@
+% Custom justify environment for per-block justification reset.
+% Restores justified alignment inside a ragged-right document via ragged2e's
+% \justifying, which preserves hyphenation. The ragged2e package is loaded
+% globally in base-packages.tex (shared with keystone.lua's justify control).
+\newenvironment{keystonejustify}%
+  {\justifying}%
+  {\par}
