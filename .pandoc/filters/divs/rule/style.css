@@ -1,0 +1,6 @@
+/* border-top only: the composition model uses two rule divs (one above,
+   one below content) so each renders its own top border. */
+.rule {
+  border-top: 1px solid #999;
+  margin: 1em 0;
+}

@@ -1,0 +1,83 @@
+% =====================================================================
+% page-layout-scrlayer.tex — Running headers/footers wired via
+% scrlayer-scrpage (KOMA-Script targets)
+%
+% Sibling of page-layout-fancyhdr.tex. Maps each of the twelve
+% \keystone* content macros (defined by page-furniture.lua) to one of
+% scrlayer-scrpage's parity-aware slot macros. Slot composition (text
+% vs. page number, recto/verso fallback, center-slot conflict) lives in
+% Lua. It also owns the head-rule default for this package: the rule is
+% off by default, and the package-agnostic \keystoneheaderrule shim
+% (defined below, emitted by page-furniture.lua only when the author
+% sets header-rule: enabled) re-enables it through KOMA's headsepline.
+% The fancyhdr counterpart defines the same shim over \headrulewidth.
+%
+% scrlayer-scrpage slot naming: the second character is page parity
+% (o/e = odd/even = recto/verso); the third character is the column
+% (l/c/r = left/center/right). The wirings below pair each parity
+% slot with the matching \keystone*{L,C,R}{O,E} macro 1:1. Under
+% scrartcl / scrreprt (single-sided by default), only the o-slots
+% are selected; the e-slot wirings compile but never render.
+%
+% Chapter-start pages — the first page of every chapter, the title
+% page, and the table of contents — render bare: no header, no
+% footer, no rules. KOMA exposes \chapterpagestyle, \titlepagestyle,
+% \partpagestyle, and \indexpagestyle as the macros that name which
+% pagestyle the corresponding transitions select; we point each at
+% the built-in "empty" pagestyle so those pages are bare. The plain
+% pagestyle itself is not redefined here — KOMA's class-level
+% transitions never select `plain` directly when these named macros
+% are set, and authors who manually issue `\thispagestyle{plain}`
+% in their content get scrlayer-scrpage's default plain pagestyle
+% (which inherits from scrheadings).
+% \@ifundefined guards each macro because scrartcl (no chapters) does
+% not define \chapterpagestyle / \partpagestyle / \indexpagestyle.
+%
+% This file is part of the Keystone project layout.
+% =====================================================================
+\usepackage{scrlayer-scrpage}
+\pagestyle{scrheadings}
+
+% Head/foot rules off by default. The head rule is opt-in via the
+% header-rule metadata key: page-furniture.lua emits \keystoneheaderrule
+% — defined just below — only when the author enables it, flipping
+% headsepline back on. (footsepline has no lever; both targets keep it
+% off — see #391.)
+\KOMAoptions{headsepline=false,footsepline=false}
+\newcommand{\keystoneheaderrule}{\KOMAoptions{headsepline=true}}
+
+% Dynamic-placeholder shims. The page-furniture filter emits these
+% macro references when an author writes `{page}`, `{chapter}`, or
+% `{section}` in `header-text` / `footer-text` content. KOMA's
+% scrlayer-scrpage does not uppercase marks by default, so no
+% `\nouppercase` wrapping is needed.
+%
+% `\leftmark` / `\rightmark` are explicit parity-independent mark
+% accessors that return the chapter and section marks respectively,
+% regardless of page parity. Under scrbook's default
+% `\automark[chapter]{section}`, `\chapter` calls `\markboth{chapter}{}`
+% (setting `\leftmark`) and `\section` calls `\markright{section}`
+% (setting `\rightmark`). Mapping `{chapter}` → `\leftmark` and
+% `{section}` → `\rightmark` keeps the semantics consistent with the
+% fancyhdr companion — `{chapter}` is always the chapter title,
+% `{section}` is always the section title, regardless of which side
+% of a spread the page lands on. The context-sensitive `\headmark`
+% would mix the two depending on page parity, which `\automark`'s
+% interface exposes but isn't what authors writing `{chapter}` ask for.
+\providecommand{\keystonepagemark}{\thepage}
+\providecommand{\keystonechaptermark}{\leftmark}
+\providecommand{\keystonesectionmark}{\rightmark}
+
+\lohead{\keystoneheaderLO}\lehead{\keystoneheaderLE}
+\cohead{\keystoneheaderCO}\cehead{\keystoneheaderCE}
+\rohead{\keystoneheaderRO}\rehead{\keystoneheaderRE}
+\lofoot{\keystonefooterLO}\lefoot{\keystonefooterLE}
+\cofoot{\keystonefooterCO}\cefoot{\keystonefooterCE}
+\rofoot{\keystonefooterRO}\refoot{\keystonefooterRE}
+
+\makeatletter
+\@ifundefined{chapterpagestyle}{}{\renewcommand*{\chapterpagestyle}{empty}}
+\@ifundefined{titlepagestyle}{}{\renewcommand*{\titlepagestyle}{empty}}
+\@ifundefined{partpagestyle}{}{\renewcommand*{\partpagestyle}{empty}}
+\@ifundefined{indexpagestyle}{}{\renewcommand*{\indexpagestyle}{empty}}
+\makeatother
