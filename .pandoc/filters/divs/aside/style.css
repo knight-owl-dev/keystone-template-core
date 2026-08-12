@@ -1,0 +1,22 @@
+.aside {
+  margin: 1.2em 0;
+  padding: 0.75em 1em;
+  border-left: 3px solid #999;
+  background-color: #f5f5f5;
+  border-radius: 2px;
+}
+.aside-title {
+  font-weight: bold;
+  font-size: 0.9em;
+  margin-bottom: 0.4em;
+  color: #666;
+}
+.aside-tip    { border-left-color: #5b7a5e; background-color: #f4f7f4; }
+.aside-tip > .aside-title { color: #5b7a5e; }
+.aside-warning    { border-left-color: #9e7c4a; background-color: #f8f5f0; }
+.aside-warning > .aside-title { color: #9e7c4a; }
+.aside-note    { border-left-color: #4a6a8a; background-color: #f0f4f8; }
+.aside-note > .aside-title { color: #4a6a8a; }
+.aside-example    { border-left-color: #6a5a7a; background-color: #f5f3f7; }
+.aside-example > .aside-title { color: #6a5a7a; }
+.aside-no-border { border-left: none; }
