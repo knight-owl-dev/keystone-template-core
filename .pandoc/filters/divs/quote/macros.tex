@@ -1,0 +1,9 @@
+% Indented block — narrowed margins with vertical spacing.
+% Wraps the LaTeX quote environment.
+\newenvironment{keystonequote}{%
+  \par\vspace{0.5\baselineskip}%
+  \begin{quote}%
+}{%
+  \end{quote}%
+  \vspace{0.5\baselineskip}%
+}

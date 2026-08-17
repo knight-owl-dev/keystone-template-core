@@ -1,0 +1,127 @@
+% =====================================================================
+% page-layout-fancyhdr.tex — Running headers/footers wired via fancyhdr
+%
+% Maps the package-agnostic \keystone* content macros (defined by the
+% page-furniture.lua filter, which owns slot composition) onto fancyhdr's
+% parity-aware slot positions. The KOMA-Script sibling
+% (page-layout-scrlayer.tex) maps the same macros onto
+% scrlayer-scrpage's native slot API.
+%
+% It also owns the head-rule default for this package: the rule is off
+% by default, and the \keystoneheaderrule shim (defined below, emitted
+% by page-furniture.lua only when the author sets header-rule: enabled)
+% re-enables it through fancyhdr's \headrulewidth.
+%
+% fancyhdr slot naming: the third character is the column
+% (L/C/R = left/center/right), the fourth is the page parity
+% (O/E = odd/even = recto/verso). Under \documentclass{article}
+% or \documentclass{report} (single-sided by default), only the
+% O-suffixed slots are selected; the E-suffixed wirings compile
+% but never render. Two-sided documents (book / scrbook, or any
+% target with classoption: twoside) get parity-distinct output.
+%
+% Opening pages — every page the class routes through `plain`: each
+% chapter's first page, the table of contents, the index, and part
+% titles — carry no running header and no rule; the heading is the
+% page's only landmark. LaTeX's own `plain` already prints a centered
+% folio there and nothing else, so redefining it below is what puts that
+% line under the author's control: it becomes the \keystoneopeningfooter
+% slots, holding `footer-text-opening`. They carry the same parity grid as
+% the body rows, because an author can move that line to the outside edge
+% of a spread, where recto and verso part ways.
+%
+% The title page is the one `plain` transition kept bare; the \maketitle
+% hook below holds that for classes setting the title in-page.
+%
+% Auto-inserted filler blanks — the verso `\cleardoublepage` inserts
+% before a recto chapter opening — are likewise kept bare, via the
+% `\cleardoublepage` redefinition near the foot of this file. fancyhdr
+% would otherwise print a stale running mark and the folio on them; the
+% scrlayer/KOMA targets style such blanks empty by default, so this
+% restores parity.
+%
+% This file is part of the Keystone project layout.
+% =====================================================================
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% fancyhdr's \pagestyle{fancy} would otherwise draw its 0.4pt default
+% headrule on every body page; zeroing it here matches the scrlayer
+% default (headsepline=false), re-raised to 0.4pt by \keystoneheaderrule
+% (below). The plain pagestyle (opening pages) keeps 0pt regardless.
+\renewcommand{\headrulewidth}{0pt}
+\newcommand{\keystoneheaderrule}{\renewcommand{\headrulewidth}{0.4pt}}
+
+% Dynamic-placeholder shims. The page-furniture filter emits these
+% macro references when an author writes `{page}`, `{chapter}`, or
+% `{section}` in `header-text` / `footer-text` content. Resolution
+% is per-package: fancyhdr's marks (\leftmark, \rightmark) are
+% uppercased by default, so `\nouppercase{...}` preserves the case
+% the author set at the `\markboth` boundary. `\providecommand` (not
+% `\newcommand`) lets a future author or test override the shim
+% per-document if needed.
+\providecommand{\keystonepagemark}{\thepage}
+\providecommand{\keystonechaptermark}{\nouppercase{\leftmark}}
+\providecommand{\keystonesectionmark}{\nouppercase{\rightmark}}
+\fancyhead[LO]{\keystoneheaderLO}\fancyhead[LE]{\keystoneheaderLE}
+\fancyhead[CO]{\keystoneheaderCO}\fancyhead[CE]{\keystoneheaderCE}
+\fancyhead[RO]{\keystoneheaderRO}\fancyhead[RE]{\keystoneheaderRE}
+\fancyfoot[LO]{\keystonefooterLO}\fancyfoot[LE]{\keystonefooterLE}
+\fancyfoot[CO]{\keystonefooterCO}\fancyfoot[CE]{\keystonefooterCE}
+\fancyfoot[RO]{\keystonefooterRO}\fancyfoot[RE]{\keystonefooterRE}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[LO]{\keystoneopeningfooterLO}\fancyfoot[LE]{\keystoneopeningfooterLE}%
+  \fancyfoot[CO]{\keystoneopeningfooterCO}\fancyfoot[CE]{\keystoneopeningfooterCE}%
+  \fancyfoot[RO]{\keystoneopeningfooterRO}\fancyfoot[RE]{\keystoneopeningfooterRE}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% Hold the "title page is not an opening page" invariant (page-furniture.lua's
+% macro contract) now that `plain` carries a footer. book and report set the
+% title inside a `titlepage` environment, already `empty`. article sets it
+% in-page, leaving `plain` on that page — which would print the opening footer
+% against a title. `\if@titlepage` is the class's own switch between those two
+% shapes, so the hook lands only on the in-page one.
+\makeatletter
+\if@titlepage\else
+  \AddToHook{cmd/maketitle/after}{\thispagestyle{empty}}
+\fi
+\makeatother
+
+% Filler blanks inserted by `\cleardoublepage` — the verso it pushes before
+% a recto-opening page in a two-sided document (book by default; report or
+% article only with `classoption: twoside`) — inherit the active
+% `\pagestyle{fancy}`, so fancyhdr prints the running head, foot, and folio
+% on a page meant to be blank (e.g. a stale "Contents" mark after the TOC).
+% Redefine `\cleardoublepage` to stamp `\thispagestyle{empty}` on the blank,
+% matching the scrlayer/KOMA targets and the emptypage package's idiom.
+%
+% `\if@twoside` / `\if@twocolumn` are the class's own guards: one-sided
+% documents insert no filler blank (their `\cleardoublepage` is a plain
+% `\clearpage`), so preserving them leaves that case untouched. The page
+% counter is not altered — only the printed folio on the blank disappears.
+%
+% Suppressing the folio too (not just head/foot) is deliberate: a filler
+% blank is a page the reader is meant to skip over, so a folio there is
+% the one piece of furniture that draws the eye back to it. KOMA
+% suppresses it likewise, which is what keeps the two targets identical
+% here. Note this is the one page class the opening footer does not
+% reach — an author who wants folios on blanks needs a bespoke pagestyle
+% (empty head, folio-only foot), not a change here.
+%
+% Body mirrors the class definition of `\cleardoublepage` (classes.dtx)
+% verbatim, plus the `\thispagestyle{empty}` line. On a TeX Live bump,
+% diff against that definition if blank-page behavior shifts.
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage%
+  \if@twoside%
+    \ifodd\c@page\else%
+      \thispagestyle{empty}%
+      \hbox{}\newpage%
+      \if@twocolumn\hbox{}\newpage\fi%
+    \fi%
+  \fi%
+}
+\makeatother

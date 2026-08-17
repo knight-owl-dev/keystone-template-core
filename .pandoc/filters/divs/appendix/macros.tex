@@ -1,0 +1,11 @@
+% Set appendix numbering to a chosen enumerator. \appendix switches chapters
+% (book/report/KOMA) or sections (article family), so self-detect which counter
+% it touched and override its representation there. #1 is a fixed counter-format
+% command from the handler's allow-list (Alph/alph/Roman/roman/arabic).
+\newcommand{\keystoneappendixnumbering}[1]{%
+  \ifdefined\chapter%
+    \renewcommand{\thechapter}{\csname#1\endcsname{chapter}}%
+  \else%
+    \renewcommand{\thesection}{\csname#1\endcsname{section}}%
+  \fi%
+}

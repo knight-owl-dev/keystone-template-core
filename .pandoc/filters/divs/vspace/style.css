@@ -1,0 +1,5 @@
+/* Restore first-line indent after a vspace div. The empty div breaks   */
+/* the p + p adjacency that controls indentation, making the following  */
+/* paragraph appear flush-left like a chapter opener. This rule bridges */
+/* the gap so indentation continues naturally across vspace breaks.     */
+.vspace + p { text-indent: var(--ks-indent); }
