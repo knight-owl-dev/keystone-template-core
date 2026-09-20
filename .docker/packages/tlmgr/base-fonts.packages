@@ -1,0 +1,12 @@
+# base-fonts.packages — font families the base closure itself needs
+#
+# The default text and math fonts, installed in the Docker `base` stage so the
+# formats built there resolve them. Every other family is installed in the
+# throwaway `fonts` stage, from `fonts.packages`.
+#
+# Their files ship, so the base stage installs them with their doc files —
+# .docker/fonts/README.md owns why a shipped font carries its license.
+# `README.md` in the directory above owns the row format.
+
+lm          Latin Modern, the default text font
+lm-math     Latin Modern Math, the default math font

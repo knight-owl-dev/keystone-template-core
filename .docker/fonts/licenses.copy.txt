@@ -1,0 +1,32 @@
+# licenses.copy.txt — Which license file travels with which fonts
+#
+# A copy list, and the map of what the font tree holds: every row is a `cp`
+# pair, the license file's path under the TeX Live doc tree and the path it
+# lands on under the staged tree. A family whose terms live in two files takes
+# two rows, and a destination has to sit in a directory the registry stages
+# fonts into.
+#
+# README.md in this directory owns how to locate a license, and why a
+# destination names its own file.
+#
+# `#` comments, blank lines and leading whitespace are ignored.
+#
+# cspell:ignore LICENCE
+
+fonts/dejavu/LICENSE                  truetype/public/dejavu/LICENSE
+fonts/ebgaramond/OFL.txt              opentype/public/ebgaramond/OFL.txt
+# fourier states its terms in section 2 of its README and ships no other text.
+fonts/fourier/README                  opentype/public/fourier/README
+fonts/imfellenglish/COPYING           opentype/iginomarini/imfellenglish/COPYING
+# libertine is dual-licensed. The package carries GPL.txt and the LICENCE.txt
+# summarizing both; the OFL.txt that summary names is not in it, so the OFL half
+# travels as the summary alone. GPL.txt keeps its name because LICENCE.txt names
+# it — the one file here another one points at.
+fonts/libertine/GPL.txt               opentype/public/libertine/GPL.txt
+fonts/libertine/LICENCE.txt           opentype/public/libertine/LICENCE.txt
+fonts/lm/GUST-FONT-LICENSE.TXT        opentype/public/lm/GUST-FONT-LICENSE.TXT
+fonts/lm-math/GUST-FONT-LICENSE.txt   opentype/public/lm-math/GUST-FONT-LICENSE.txt
+fonts/noto/LICENSE_OFL.txt            truetype/google/noto/LICENSE_OFL.txt
+# sourcecodepro files its under doc/latex/, not doc/fonts/.
+latex/sourcecodepro/LICENSE.txt       opentype/adobe/sourcecodepro/LICENSE.txt
+fonts/tex-gyre/GUST-FONT-LICENSE.txt  opentype/public/tex-gyre/GUST-FONT-LICENSE.txt

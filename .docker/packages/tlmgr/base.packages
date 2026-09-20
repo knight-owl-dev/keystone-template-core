@@ -1,0 +1,38 @@
+# base.packages — the general engine and pandoc-template closure
+#
+# Installed in the Docker `base` stage. `README.md` in the directory above owns
+# the row format.
+#
+# `ec` has no direct consumer here: it carries ectt1000.tfm, which soul.sty
+# loads at package load. Pandoc pulls soul in for `.mark`/`.underline` under
+# XeLaTeX, and with no mf in the image there is no mktextfm fallback.
+
+amsfonts    AMS math symbol fonts
+amsmath
+bidi
+bookmark
+booktabs
+caption
+ec          EC font metrics, required by soul
+fancyvrb
+float
+fontspec
+footnotehyper
+framed
+geometry
+graphics
+hyperref
+iftex
+latex
+microtype
+multirow
+parskip
+setspace
+soul
+tools
+ulem
+unicode-math
+upquote
+xcolor
+xetex
+xurl

@@ -1,0 +1,28 @@
+# babel.packages — the languages an author can select with `lang:`
+#
+# Installed with the base closure, listed explicitly: collection-lang* would
+# drag in hundreds of MB of docs and fonts for the same coverage. Non-Latin
+# scripts (CJK, Arabic, Indic) are out of scope — they need fonts this image
+# does not carry.
+#
+# Every language here needs its hyphenation pattern in hyphen.packages, under
+# the name TeX Live gives it there.
+#
+# `README.md` in the directory above owns the row format.
+
+babel
+babel-basque
+babel-czech
+babel-danish
+babel-dutch
+babel-english
+babel-finnish
+babel-french
+babel-german
+babel-hungarian
+babel-italian
+babel-norsk
+babel-polish
+babel-portuges
+babel-spanish
+babel-swedish

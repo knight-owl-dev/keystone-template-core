@@ -1,0 +1,7 @@
+# build output
+/artifacts/
+
+.DS_Store
+
+# IDE files
+.vscode/

@@ -1,0 +1,261 @@
+---
+# ------------------------------------------------------------------------------
+# Keystone document metadata
+#
+# How this document looks and what metadata it carries. What the project is
+# called and how it builds is project.conf.
+#
+# ➤ Set title, author, and the summary field your target requires; everything
+# else resolves on its own.
+#
+# https://keystone.knight-owl.dev/configuration/metadata/
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# Identity
+# https://keystone.knight-owl.dev/configuration/metadata/#identity
+# ------------------------------------------------------------------------------
+
+# The title, on the title page and in the metadata.
+title: Keystone
+
+# An optional line beneath the title.
+subtitle: The sample book using the Keystone project
+
+# Author or organization; comma-separate several.
+author: Knight Owl LLC
+
+# auto (the build date), disabled, or literal text such as March 30, 2025.
+date: auto
+
+# BCP-47 code — sets hyphenation and the labels Keystone generates, such as
+# "Contents". e.g. en, en-US, uk-UA, de, fr.
+lang: en-US
+
+# The document class and the validation rules that come with it: book, report
+# or article, or the KOMA-Script counterpart of each — scrbook, scrreprt,
+# scrartcl.
+# https://keystone.knight-owl.dev/configuration/targets/
+target: book
+
+# ------------------------------------------------------------------------------
+# Structure
+# https://keystone.knight-owl.dev/configuration/metadata/#structure
+# ------------------------------------------------------------------------------
+
+# Generate a table of contents.
+toc: true
+
+# Heading levels the contents lists (# = level 1). A whole number, 1 or more.
+toc-depth: 3
+
+# Number headings (1, 1.1, 1.1.1). Exempt one with: # Preface {.unnumbered}
+numbersections: true
+
+# Deepest heading level that carries a number. Empty numbers every level.
+secnumdepth:
+
+# ------------------------------------------------------------------------------
+# Body text
+# https://keystone.knight-owl.dev/configuration/metadata/#body-text
+# ------------------------------------------------------------------------------
+
+# auto (the target's convention) or disabled for ragged-right text.
+justify-control: auto
+
+# auto (the target's convention) or disabled for no first-line indent.
+indent-control: auto
+
+# footnotes or endnotes (PDF). Empty keeps the target's convention.
+# https://keystone.knight-owl.dev/writing/notes-and-citations/#where-notes-land
+note-placement:
+
+# ------------------------------------------------------------------------------
+# Running headers & footers (PDF only)
+# https://keystone.knight-owl.dev/writing/running-headers/
+# ------------------------------------------------------------------------------
+#
+# Each text key takes inline markdown, shortcuts, and {placeholder} tokens —
+# {title}, {author}, {date}, {page}, {chapter}, {section}, and any mark declared
+# below. `disabled` suppresses a key; a -recto / -verso key overrides the
+# un-suffixed one on that parity.
+
+# Mark channels the manuscript sets with [text]{.set mark="name"} and a header
+# reads back as {name}:
+#
+# marks:
+#   - poem-author
+#   - poem-title
+marks:
+
+# Header content on every page, and the fallback for the parity keys below.
+header-text:
+
+# Header content on recto (right-hand) pages.
+header-text-recto:
+
+# Header content on verso (left-hand) pages.
+header-text-verso:
+
+# enabled draws a thin rule beneath the running header on body pages.
+header-rule: disabled
+
+# Footer content on body pages, and the fallback for the parity keys below.
+footer-text:
+
+# Footer content on recto (right-hand) pages.
+footer-text-recto:
+
+# Footer content on verso (left-hand) pages.
+footer-text-verso:
+
+# The single line an opening page carries at the foot. Empty renders {page};
+# disabled leaves the page bare.
+footer-text-opening:
+
+# Empty or center, the drop-folio convention; auto follows page-number-position.
+footer-text-opening-column:
+
+# Where the folio sits on body pages, as <row>:<col>: header, footer or
+# header-and-footer, by left, center, right, outer or inner. Empty keeps the
+# target's convention.
+page-number-position:
+
+# ------------------------------------------------------------------------------
+# Summary fields
+# https://keystone.knight-owl.dev/configuration/metadata/#summary-fields
+# ------------------------------------------------------------------------------
+#
+# Your target requires one of these; the others are filled in from it —
+# abstract to description, description to subject.
+
+# The blurb. Required for book and scrbook. Becomes dc:description in EPUB,
+# DOCX and ODT.
+description: |
+  This is a tribute to beginnings.
+  In every language, in every framework, "Hello, world" is the first spark — the moment code speaks back.
+  This sample book is your invitation to begin — to build something real, reproducible, and yours.
+
+# The subject field in every format — PDF /Subject, and dc:subject in EPUB,
+# DOCX and ODT. Empty takes description; set it only for a different value.
+subject:
+
+# Required for article, report and their KOMA counterparts. Renders as an
+# abstract block in the PDF, and fills description when that is blank:
+#
+# abstract: |
+#   A concise summary of the article's content and purpose.
+abstract:
+
+# ------------------------------------------------------------------------------
+# Output metadata
+# ------------------------------------------------------------------------------
+
+# Keywords for indexing and cataloging.
+# https://keystone.knight-owl.dev/configuration/metadata/#identity
+keywords:
+  - hello-world
+  - keystone
+  - book
+
+# auto embeds an XMP packet alongside the PDF's Info dictionary. disabled omits
+# the packet — much faster to typeset, but keywords then survive only in the
+# legacy Info dictionary, where many readers and indexers do not look.
+# https://keystone.knight-owl.dev/configuration/metadata/#code-output-metadata
+xmp-metadata: auto
+
+# ------------------------------------------------------------------------------
+# References and citations
+# https://keystone.knight-owl.dev/writing/notes-and-citations/
+# ------------------------------------------------------------------------------
+#
+# A bibliography turns citations on; cite entries from Markdown as [@key].
+
+# A .bib or CSL-JSON file in manuscript/, named without its path, or a list of
+# them. Empty leaves citations off.
+bibliography:
+
+# Empty falls back to chicago-author-date; chicago-notes-bibliography also
+# ships. Or name your own .csl file in manuscript/.
+csl:
+
+# Link each in-text citation to its bibliography entry.
+link-citations: true
+
+# ------------------------------------------------------------------------------
+# PDF layout
+# ------------------------------------------------------------------------------
+
+# Common values: letter, a4, a5, b5 — written without the paper suffix
+# (a4, not a4paper). Empty falls back to letter.
+# https://keystone.knight-owl.dev/configuration/metadata/#page-layout-pdf
+papersize: letter
+
+# auto sizes the text block to the page and follows the target's sidedness,
+# widening the outer margin on a two-sided book. Replace it to lay out the page
+# yourself — LaTeX geometry syntax, e.g. inner=30mm, outer=20mm for a binding
+# gutter. A geometry that sets the page size needs papersize left empty, and
+# auto cannot be combined with options of your own. Empty falls back to auto.
+# https://keystone.knight-owl.dev/configuration/metadata/#page-layout-pdf
+geometry: auto
+
+# Base body size. Standard targets take 10pt, 11pt, 12pt; KOMA targets also
+# 13pt, 14pt, 17pt, 20pt. Empty falls back to 11pt.
+# https://keystone.knight-owl.dev/configuration/targets/#base-font-size
+fontsize: 11pt
+
+# Leading multiplier. Empty or 1.0 is single-spaced; 1.05–1.15 suits a book.
+# https://keystone.knight-owl.dev/writing/typography/#line-spacing
+linestretch:
+
+# Color link text rather than boxing it, and the color of each link kind.
+# Quote every value — a bare # starts a YAML comment.
+# https://keystone.knight-owl.dev/writing/typography/#link-colors
+colorlinks: false
+linkcolor:
+urlcolor:
+citecolor:
+toccolor:
+
+# Body font, in PDF and EPUB — any font-registry key, e.g. libertine,
+# dejavu-serif, latin-modern.
+# https://keystone.knight-owl.dev/writing/typography/#the-document-font
+fontfamily: libertine
+
+# Code font, in PDF and EPUB — any font-registry key. Empty falls back to
+# latin-modern-mono; dejavu-mono has the widest Unicode range.
+# https://keystone.knight-owl.dev/writing/typography/#the-code-font
+monofont:
+
+# Empty or disabled draws none; enabled draws "DRAFT"; any other value is the
+# watermark text.
+# https://keystone.knight-owl.dev/configuration/metadata/#page-layout-pdf
+draft:
+
+# Watermark size, where 1.0 fits about five characters across the diagonal.
+# Empty shrinks longer text to fit.
+# https://keystone.knight-owl.dev/configuration/metadata/#page-layout-pdf
+draft-scale:
+
+# A list of document-class options. Common values: oneside, twoside,
+# twocolumn, landscape.
+# https://keystone.knight-owl.dev/configuration/metadata/#page-layout-pdf
+classoption:
+
+# ------------------------------------------------------------------------------
+# Code blocks
+# ------------------------------------------------------------------------------
+
+# Syntax-highlighting palette, which also sets the block background: tango
+# (default), pygments, kate, monochrome, haddock, espresso, zenburn, breezedark.
+# https://keystone.knight-owl.dev/writing/code/#syntax-highlighting-themes
+code-theme: tango
+
+# ------------------------------------------------------------------------------
+# EPUB
+# ------------------------------------------------------------------------------
+
+# Cover image, by path from the project root, e.g. assets/cover.jpg.
+# https://keystone.knight-owl.dev/configuration/metadata/#epub
+cover-image:
+...

@@ -1,0 +1,18 @@
+// keystone.aptconf — settings for the image's apt layers
+//
+// Copied to /etc/apt/apt.conf by every stage that installs packages. apt reads
+// that file last, so these settings are the image's final word; update and
+// install both take them, with no flag repeated at a call site.
+//
+// The apt layers fetch from Ubuntu's package mirrors, so a slow or unreachable
+// one fails the build. Timeout bounds each connect and each read, so a slow but
+// progressing mirror runs to completion; a dead one costs 30s per attempt,
+// times the retries.
+//
+// `apt-get update` exits 0 on a partial index failure and only warns, which
+// resurfaces further down as a bogus "Version '*' for <package> was not
+// found". Error-Mode "any" makes the failed fetch the error instead.
+
+Acquire::Retries "3";
+Acquire::http::Timeout "30";
+APT::Update::Error-Mode "any";

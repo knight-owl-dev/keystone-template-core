@@ -1,0 +1,40 @@
+---
+# Keystone-generated Pandoc metadata file
+# See: https://pandoc.org/MANUAL.html#variables for more details
+
+# KOMA-Script article layout settings (scrartcl = article + KOMA typography).
+documentclass: scrartcl
+keystone-justify: true
+keystone-indent: false
+
+# Which base-font-size set this target allows (defined in lib/fontsize.lua).
+keystone-fontsize-set: koma
+
+# Note placement (PDF only): footnotes (page bottom) or endnotes (collected
+# at end). The author's `note-placement` overrides. EPUB is always
+# section-end.
+keystone-note-placement: footnotes
+
+# Whether this class lays out in spreads — declared rather than inferred
+# from documentclass, and the folio's default position derives from it. An
+# author's `classoption: twoside` overrides it for their document.
+keystone-twoside: false
+
+keystone-required-fields:
+  - abstract
+
+# EPUB and HTML specific styling
+css:
+  - .pandoc/includes/base-style.css
+
+# LaTeX-specific styling
+header-includes:
+  - \input{.pandoc/includes/base-packages.tex}
+
+  # Page layout (running headers/footers). Slot content comes from
+  # page-furniture.lua; this include is pure wiring.
+  - \input{.pandoc/includes/page-layout-scrlayer.tex}
+
+  # Load styles last to avoid any conflicts
+  - \input{.pandoc/includes/base-style.tex}
+...

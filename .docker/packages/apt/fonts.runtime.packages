@@ -1,0 +1,9 @@
+# fonts.runtime.packages — XeLaTeX's font runtime
+#
+# Installed twice: in the `base` stage, where fmtutil needs it, and again in the
+# final stage, which inherits nothing from it. `README.md` in the directory
+# above owns the row format and the classes.
+
+fontconfig          font discovery for XeLaTeX
+libfontconfig1      the fontconfig library itself
+libfreetype6        the library XeLaTeX renders glyphs with

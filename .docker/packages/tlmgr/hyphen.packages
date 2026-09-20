@@ -1,0 +1,20 @@
+# hyphen.packages — hyphenation patterns for the languages in babel.packages
+#
+# Installed with the base closure, in the same call. `README.md` in the directory
+# above owns the row format.
+
+hyphen-basque
+hyphen-czech
+hyphen-danish
+hyphen-dutch
+hyphen-english
+hyphen-finnish
+hyphen-french
+hyphen-german
+hyphen-hungarian
+hyphen-italian
+hyphen-norwegian
+hyphen-polish
+hyphen-portuguese
+hyphen-spanish
+hyphen-swedish

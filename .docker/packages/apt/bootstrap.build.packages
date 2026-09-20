@@ -1,0 +1,12 @@
+# bootstrap.build.packages — the toolchain install-texlive.sh needs
+#
+# Installed in the Docker `base` stage, so nothing here is installed into the
+# final image. `README.md` in the directory above owns the row format and the
+# classes.
+
+gnupg       verifies the TeX Live repository signature
+gzip        unpacks the installer archive
+perl        install-tl and tlmgr are Perl programs
+tar         unpacks the installer archive
+wget        fetches the installer and the packages
+xzdec       decompresses the package archives

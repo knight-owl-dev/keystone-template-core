@@ -1,0 +1,17 @@
+# fonts.packages — font families, installed in the Docker `fonts` stage
+#
+# The stage extracts the files the font registry references and each family's
+# license; `.docker/fonts/README.md` owns why. `lm` and `lm-math` are extracted
+# alongside these, inherited from the base stage that `base-fonts.packages`
+# installs them in.
+#
+# `README.md` in the directory above owns the row format.
+
+dejavu          DejaVu font families (TTF)
+ebgaramond      EB Garamond font family
+fourier         Fourier ornaments OTF (fleurons, manicules, pilcrows)
+imfellenglish   IM Fell English fonts; ships FeFlow1/2 floral ornament OTFs
+libertine       Linux Libertine / Biolinum font families
+noto            Noto Sans Mono (TTF); modern, broad-coverage code face
+sourcecodepro   Adobe Source Code Pro OTF; modern code face
+tex-gyre        TeX Gyre font families

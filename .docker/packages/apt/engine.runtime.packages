@@ -1,0 +1,9 @@
+# engine.runtime.packages — the programs the pipeline runs as subprocesses
+#
+# Installed in the final stage only — nothing here builds TeX Live.
+# socat is the one client for the hook transport — see
+# .pandoc/filters/lib/ipc.lua. `README.md` in the directory above owns the row
+# format and the classes.
+
+librsvg2-bin        rsvg-convert, which Pandoc shells out to for SVG to PDF
+socat               the client the engine uses to reach a hook's Unix socket

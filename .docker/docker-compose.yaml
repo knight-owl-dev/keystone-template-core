@@ -1,0 +1,51 @@
+services:
+  keystone:
+    image: ${KEYSTONE_DOCKER_IMAGE}
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+    working_dir: /keystone
+
+    # Hook wiring, ready and empty until you add a hook service — this and the
+    # socket and cache volumes below. service_healthy is required.
+    # https://keystone.knight-owl.dev/hooks/#wiring-one-in
+    # depends_on:
+    #   <your-hook>:
+    #     condition: service_healthy
+    network_mode: none
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+    environment:
+      HOME: /tmp
+    volumes:
+      - hooks:/keystone/.hooks:ro
+      - hooks-cache:/keystone/.hooks-cache
+      - ../artifacts:/keystone/artifacts
+      - ../assets:/keystone/assets:ro
+      - ../fonts:/keystone/fonts:ro
+      - ../manuscript:/keystone/manuscript:ro
+      - ../pandoc.yaml:/keystone/.pandoc/metadata/user-metadata.yaml:ro
+      - ../publish.txt:/keystone/publish.txt:ro
+      - ../shortcuts.yaml:/keystone/shortcuts.yaml:ro
+    env_file:
+      - ../project.conf
+
+volumes:
+  # In memory, and gone with the containers that shared it.
+  # https://keystone.knight-owl.dev/hooks/#wiring-one-in
+  hooks:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1m,mode=1777
+
+  # Replies, remembered between builds.
+  # https://keystone.knight-owl.dev/hooks/#caching
+  hooks-cache:

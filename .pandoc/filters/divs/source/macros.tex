@@ -1,0 +1,9 @@
+% Attribution line — upright, right-aligned, smaller font.
+% The em-dash is prepended by the macro so LaTeX renders the Unicode
+% character directly (avoids the --- ligature issue inside font scopes).
+\newcommand{\keystonesource}[1]{%
+  \par\vspace{0.4\baselineskip}%
+  \begingroup\normalfont\normalsize\raggedleft%
+  \textemdash\,#1\par
+  \endgroup
+}

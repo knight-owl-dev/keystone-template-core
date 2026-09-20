@@ -1,0 +1,97 @@
+% =====================================================================
+% page-layout-scrlayer.tex — Running headers/footers wired via
+% scrlayer-scrpage (KOMA-Script targets)
+%
+% Sibling of page-layout-fancyhdr.tex. Maps the package-agnostic
+% \keystone* content macros (defined by page-furniture.lua, which owns
+% slot composition) onto scrlayer-scrpage's parity-aware slot macros.
+%
+% It also owns the head-rule default for this package: the rule is off
+% by default, and the \keystoneheaderrule shim (defined below, emitted
+% by page-furniture.lua only when the author sets header-rule: enabled)
+% re-enables it through KOMA's headsepline.
+%
+% scrlayer-scrpage slot naming: the second character is page parity
+% (o/e = odd/even = recto/verso); the third character is the column
+% (l/c/r = left/center/right). The wirings below pair each parity
+% slot with the matching \keystone*{L,C,R}{O,E} macro 1:1. Under
+% scrartcl / scrreprt (single-sided by default), only the o-slots
+% are selected; the e-slot wirings compile but never render.
+%
+% Opening pages carry no running header and no rule, only the
+% \keystoneopeningfooter* slot the author's `footer-text-opening` lands
+% in — a full parity set, since that content can sit on the outside edge
+% of a spread. KOMA routes such pages through \chapterpagestyle,
+% \partpagestyle, and \indexpagestyle; the block at the foot of this file
+% pins that set. Each scrlayer-scrpage page style is a pair whose *plain*
+% member those macros select, so the plain member is the opening-page
+% style and every slot command takes its content in the optional
+% argument. The head rule cannot reach it: `headsepline` governs the main
+% member, `plainheadsepline` the plain one, and only the former has a lever
+% (see above).
+%
+% Of the four transitions KOMA names, only \titlepagestyle moves: the
+% title page stays bare on `empty`, the invariant page-furniture.lua's
+% macro contract asks every include to hold. It is left unguarded so a
+% class that ever lacked it fails loudly instead of printing a folio
+% against a title. The other three already default to `plain` and are
+% pinned anyway, so this file states the opening-page set rather than
+% inheriting it. \chapterpagestyle and \partpagestyle are guarded
+% because scrartcl gives chapters and parts no page of their own and
+% defines neither.
+%
+% This file is part of the Keystone project layout.
+% =====================================================================
+\usepackage{scrlayer-scrpage}
+\pagestyle{scrheadings}
+
+% Head/foot rules off by default. The head rule is opt-in via the
+% header-rule metadata key: page-furniture.lua emits \keystoneheaderrule
+% — defined just below — only when the author enables it, flipping
+% headsepline back on. (footsepline has no lever; both targets keep it
+% off.)
+\KOMAoptions{headsepline=false,footsepline=false}
+\newcommand{\keystoneheaderrule}{\KOMAoptions{headsepline=true}}
+
+% Dynamic-placeholder shims. The page-furniture filter emits these
+% macro references when an author writes `{page}`, `{chapter}`, or
+% `{section}` in `header-text` / `footer-text` content. KOMA's
+% scrlayer-scrpage does not uppercase marks by default, so no
+% `\nouppercase` wrapping is needed.
+%
+% `\leftmark` / `\rightmark` are explicit parity-independent mark
+% accessors that return the chapter and section marks respectively,
+% regardless of page parity. Under scrbook's default
+% `\automark[chapter]{section}`, `\chapter` calls `\markboth{chapter}{}`
+% (setting `\leftmark`) and `\section` calls `\markright{section}`
+% (setting `\rightmark`). Mapping `{chapter}` → `\leftmark` and
+% `{section}` → `\rightmark` keeps the semantics consistent with the
+% fancyhdr companion — `{chapter}` is always the chapter title,
+% `{section}` is always the section title, regardless of which side
+% of a spread the page lands on. The context-sensitive `\headmark`
+% would mix the two depending on page parity, which `\automark`'s
+% interface exposes but isn't what authors writing `{chapter}` ask for.
+\providecommand{\keystonepagemark}{\thepage}
+\providecommand{\keystonechaptermark}{\leftmark}
+\providecommand{\keystonesectionmark}{\rightmark}
+
+% Opening pages take the pair's plain member, so the package's own plain
+% content is dropped first — every slot below is either set here or bare.
+\clearplainofpairofpagestyles%
+
+\lohead{\keystoneheaderLO}\lehead{\keystoneheaderLE}
+\cohead{\keystoneheaderCO}\cehead{\keystoneheaderCE}
+\rohead{\keystoneheaderRO}\rehead{\keystoneheaderRE}
+\lofoot[\keystoneopeningfooterLO]{\keystonefooterLO}
+\lefoot[\keystoneopeningfooterLE]{\keystonefooterLE}
+\cofoot[\keystoneopeningfooterCO]{\keystonefooterCO}
+\cefoot[\keystoneopeningfooterCE]{\keystonefooterCE}
+\rofoot[\keystoneopeningfooterRO]{\keystonefooterRO}
+\refoot[\keystoneopeningfooterRE]{\keystonefooterRE}
+
+\renewcommand*{\titlepagestyle}{empty}
+\renewcommand*{\indexpagestyle}{plain}
+\makeatletter
+\@ifundefined{chapterpagestyle}{}{\renewcommand*{\chapterpagestyle}{plain}}
+\@ifundefined{partpagestyle}{}{\renewcommand*{\partpagestyle}{plain}}
+\makeatother

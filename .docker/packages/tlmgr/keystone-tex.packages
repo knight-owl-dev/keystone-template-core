@@ -1,0 +1,18 @@
+# keystone-tex.packages — Keystone's own packages, atop the general base
+#
+# Installed in the Docker `keystone-tex` stage. `README.md` in the directory
+# above owns the row format.
+
+draftwatermark  watermark overlay for draft documents
+endnotes        collected endnotes, gathered at the end of a document
+fancyhdr        page layout, via page-layout-fancyhdr.tex
+fvextra         fancyvrb extensions for code listings
+hyperxmp        embeds keywords and metadata into the PDF Info dict and XMP stream
+koma-script     KOMA-Script document classes, plus scrlayer-scrpage.sty
+lettrine        drop caps
+lineno          line numbering, used by pandoc
+pdfcol          color stacks, a tcolorbox skins dependency
+psnfss          provides pifont.sty for Dingbat symbols
+ragged2e        hyphenation-preserving ragged-right
+tcolorbox       colored boxes for callout and aside blocks
+tikzfill        fill patterns, a tcolorbox skins dependency
